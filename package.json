@@ -16,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/calgarybino/tinyapp/issues"
   },
-  "homepage": "https://github.com/calgarybino/tinyapp#readme"
+  "homepage": "https://github.com/calgarybino/tinyapp#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
