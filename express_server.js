@@ -34,10 +34,7 @@ app.get("/urls/:id", (req, res) => {
   };
   res.render("urls_show", templateVars);
 });
-// app.post("/urls", (req, res) => {
-//   console.log(req.body); // Log the POST request body to the console
-//   res.send("Ok"); // Respond with 'Ok' (we will replace this)
-// });
+
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString(); //generate a unique short URL ID
   const longURL = req.body.longURL;
@@ -46,6 +43,7 @@ app.post("/urls", (req, res) => {
   // res.redirect(`/url/${shortURL}`);
   res.redirect("/urls");
 });
+//inserting new url
 app.post("/urls/:id", (req, res) => {
   const id = req.params.id;
   const newURL = req.body.newURL;
@@ -53,13 +51,19 @@ app.post("/urls/:id", (req, res) => {
   urlDatabase[id] = newURL; // update the long URL in the db
   res.redirect("/urls");
 });
-
-app.post("/urls/:id", (req, res) => {
+//deleting URL from the database
+app.post("/urls/:id/delete", (req, res) => {
   const id = req.params.id;
 
   delete urlDatabase[id]; // remove the URL from the db
   res.redirect("/urls");
 });
+app.post('/logout', (req, res) => {
+  // Perform any necessary logout logic here
+
+  // Redirect the client to the appropriate page (e.g., login, home, etc.)
+  res.redirect('/urls');
+})
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });

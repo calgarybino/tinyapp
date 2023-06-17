@@ -33,6 +33,11 @@
           <tr>
             <td><%= id %></td>
             <td><%= urls[id] %></td>
+            <td>
+              <form method="POST" action="/urls/<%= id %>/delete">
+                <button type="submit" class="btn btn-danger">Delete</button>
+              </form>
+            </td>
           </tr>
           <% } %>
         </tbody>
@@ -54,5 +59,6 @@
       integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
       crossorigin="anonymous"
     ></script>
+    
   </body>
 </html>
