@@ -63,7 +63,16 @@ app.post('/logout', (req, res) => {
 
   // Redirect the client to the appropriate page (e.g., login, home, etc.)
   res.redirect('/urls');
-})
+});
+app.post('/login', (req, res) => {
+  const username = req.body.username; // Retrieve the username from the request body
+
+  // Set the 'username' cookie with the provided username
+  res.cookie('username', username);
+
+  // Redirect the browser back to the /urls page
+  res.redirect('/urls');
+});
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
