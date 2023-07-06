@@ -1,3 +1,4 @@
+const { Template } = require("ejs");
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
@@ -7,8 +8,9 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com",
 };
 
-app.get("/", (req, res) => {
-  res.send("Hello!");
+app.get("/urls", (req, res) => {
+  const template={urls:urlDatabase}
+  res.render("urls_index",template);
 });
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
