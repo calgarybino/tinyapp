@@ -50,7 +50,7 @@ app.post("/urls/:id/delete", (req, res) => {
   // Check if the short URL id exists in the urlDatabase
   if (urlDatabase.hasOwnProperty(shortURLID)) {
     // remove the URL from the db
-    delete urlDatabase[id];
+    delete urlDatabase[shortURLID];
     // Redirect the client back to the urls_index page ("/urls")
     res.redirect("/urls");
   } else {
