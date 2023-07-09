@@ -44,6 +44,20 @@ app.get("/urls/:id", (req, res) => {
   };
   res.render("urls_show", templateVars);
 });
+//deleting URL from
+app.post("/urls/:id/delete", (req, res) => {
+  const shortURLID = req.params.id;
+  // Check if the short URL id exists in the urlDatabase
+  if (urlDatabase.hasOwnProperty(shortURLID)) {
+    // remove the URL from the db
+    delete urlDatabase[id];
+    // Redirect the client back to the urls_index page ("/urls")
+    res.redirect("/urls");
+  } else {
+    // Handle the case where the short URL id is not found
+    res.status(404).send("Short URL not found");
+  }
+});
 app.get("/u/:id", (req, res) => {
   const shortURLID = req.params.id;
   const longURL = urlDatabase[shortURLID];
