@@ -10,11 +10,13 @@ function generateRandomString() {
 
   return randomString;
 }
+const cookieParser = require("cookie-parser");
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
+app.use(cookieParser());
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
@@ -66,6 +68,14 @@ app.post("/urls/:id", (req, res) => {
 
   // Redirect the client back to the /urls page
   res.redirect("/urls");
+});
+app.post("/login", (req, res) => {
+  const { username } = req.body; // Retrieve the username from the request body
+
+  // Set a cookie named 'username' with the value of the submitted username
+  res.cookie("username", username);
+
+  res.redirect("/urls"); // Redirect the browser back to the /urls page
 });
 app.get("/u/:id", (req, res) => {
   const shortURLID = req.params.id;
