@@ -21,9 +21,16 @@ const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
 };
-
+app.use((req, res, next) => {
+  res.locals.username = req.cookies.username;
+  next();
+});
 app.get("/urls", (req, res) => {
-  const template = { urls: urlDatabase };
+  const template = {
+    username: req.cookies.username,
+    urls: urlDatabase,
+  };
+
   res.render("urls_index", template);
 });
 app.get("/urls/new", (req, res) => {
