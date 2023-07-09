@@ -84,6 +84,11 @@ app.post("/login", (req, res) => {
 
   res.redirect("/urls"); // Redirect the browser back to the /urls page
 });
+// POST request handler for /logout
+app.post('/logout', (req, res) => {
+  res.clearCookie('username'); // Clear the username cookie
+  res.redirect('/urls'); // Redirect the user back to the /urls page
+});
 app.get("/u/:id", (req, res) => {
   const shortURLID = req.params.id;
   const longURL = urlDatabase[shortURLID];
