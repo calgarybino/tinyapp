@@ -18,6 +18,11 @@
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
       </div>
     </div>
+    <td>
+      <% if (username) { %>
+      <span class="username">Logged in as <%= username %></span>
+      <% } %>
+    </td>
     <form method="POST" action="/login" class="form-inline">
       <input
         type="text"
