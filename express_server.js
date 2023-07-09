@@ -58,6 +58,15 @@ app.post("/urls/:id/delete", (req, res) => {
     res.status(404).send("Short URL not found");
   }
 });
+app.post("/urls/:id", (req, res) => {
+  const shortURL = req.params.id;
+  const newURL = req.body.newURL;
+  // Update the long URL value based on the new value in req.body
+  urlDatabase[shortURL] = newURL;
+
+  // Redirect the client back to the /urls page
+  res.redirect("/urls");
+});
 app.get("/u/:id", (req, res) => {
   const shortURLID = req.params.id;
   const longURL = urlDatabase[shortURLID];
