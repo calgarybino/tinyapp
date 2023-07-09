@@ -1,0 +1,17 @@
+# TinyApp
+TinyApp is a simple web application that allows user to shorten long URLS. It provides a convenient way to create a= shortened URLS and keep trackof them.
+## Features
+* Create short URLS from long URLS
+* Update the long URL associated with a short URL
+* Delete a short URL
+### Technologies
+* Node.js
+* Express.js
+* EJS template
+
+#### Installation
+1 git clone https://github.com/calgarybino/tinyapp
+2 cd tinyapp
+3 npm install
+4 npm start 
+5 http://localhost:8080
