@@ -17,6 +17,18 @@ const PORT = 8080; // default port 8080
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(cookieParser());
+const users = {
+  userRandomID: {
+    id: "userRandomID",
+    email: "user@example.com",
+    password: "purple-monkey-dinosaur",
+  },
+  user2RandomID: {
+    id: "user2RandomID",
+    email: "user2@example.com",
+    password: "dishwasher-funk",
+  },
+};
 const urlDatabase = {
   b2xVn2: "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com",
@@ -25,16 +37,28 @@ app.use((req, res, next) => {
   res.locals.username = req.cookies.username;
   next();
 });
+app.get("/login", (req, res) => {
+  res.render("login");
+});
 app.get("/urls", (req, res) => {
+  const userId = req.cookies.user_id;
   const template = {
-    username: req.cookies.username,
+    user: users[userId],
     urls: urlDatabase,
   };
 
   res.render("urls_index", template);
 });
+app.get("/register", (req, res) => {
+  res.render("register");
+});
 app.get("/urls/new", (req, res) => {
-  res.render("urls_new");
+  const userId = req.cookies.user_id;
+  const template = {
+    user: users[userId],
+  };
+
+  res.render("urls_new", template);
 });
 app.post("/urls", (req, res) => {
   // Generate a random string for the short URL id
@@ -48,6 +72,7 @@ app.post("/urls", (req, res) => {
 });
 app.get("/urls/:id", (req, res) => {
   const templateVars = {
+    user:users[req.cookies.user_id],
     id: req.params.id,
     longURL: urlDatabase[req.params.id],
   };
@@ -76,18 +101,54 @@ app.post("/urls/:id", (req, res) => {
   // Redirect the client back to the /urls page
   res.redirect("/urls");
 });
+app.post("/register", (req, res) => {
+  const { email, password } = req.body;
+  //check if email or password is empty
+  if (!email || !password) {
+    return res.status(400).send("email and password are required. ");
+  }
+  //Check if email already exists in the user object
+  const existtingUser = Object.values(users).find(
+    (user) => user.email === email
+  );
+  if (existtingUser) {
+    return res.status(400).send("email is already registered");
+  }
+  //generate a random user ID
+  const userID = generateRandomString();
+  const newUser = {
+    id: userID,
+    email,
+    password,
+  };
+  // Add the new user to the global users object
+  users[userID] = newUser;
+
+  // Set the user_id cookie containing the user's ID
+  res.cookie("user_id", userID);
+
+  // Redirect the user to the /urls page
+  res.redirect("urls");
+});
+
 app.post("/login", (req, res) => {
-  const { username } = req.body; // Retrieve the username from the request body
-
-  // Set a cookie named 'username' with the value of the submitted username
-  res.cookie("username", username);
-
-  res.redirect("/urls"); // Redirect the browser back to the /urls page
+  const { email, password } = req.body; // Retrieve the username from the request body
+  //Find the user with the matching email in the users objects
+  const user = Object.values(users).find((user) => user.email === email);
+  //check if a user with the given email is found and the password match
+  if (user && user.password === password) {
+    // Set the user_id cookie containing the user's ID
+    res.cookie("user_id", user.id);
+    res.redirect("/urls"); // Redirect the browser back to the /urls page
+  } else {
+    //returning an error if the login is unsuccessful
+    res.status(401).send("Invalid email or Password");
+  }
 });
 // POST request handler for /logout
-app.post('/logout', (req, res) => {
-  res.clearCookie('username'); // Clear the username cookie
-  res.redirect('/urls'); // Redirect the user back to the /urls page
+app.post("/logout", (req, res) => {
+  res.clearCookie("user_id"); // Clear the username cookie
+  res.redirect("/urls"); // Redirect the user back to the /urls page
 });
 app.get("/u/:id", (req, res) => {
   const shortURLID = req.params.id;
