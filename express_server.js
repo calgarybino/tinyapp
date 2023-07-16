@@ -38,7 +38,11 @@ app.use((req, res, next) => {
   next();
 });
 app.get("/login", (req, res) => {
-  res.render("login");
+  if (req.cookies.user_id) {
+    res.redirect("/urls");
+  } else {
+    res.render("login");
+  }
 });
 app.get("/urls", (req, res) => {
   const userId = req.cookies.user_id;
@@ -50,15 +54,23 @@ app.get("/urls", (req, res) => {
   res.render("urls_index", template);
 });
 app.get("/register", (req, res) => {
-  res.render("register");
+  if (req.cookies.user_id) {
+    res.redirect("/urls");
+  } else {
+    res.render("register");
+  }
 });
 app.get("/urls/new", (req, res) => {
-  const userId = req.cookies.user_id;
-  const template = {
-    user: users[userId],
-  };
+  if (!req.cookies.user_id) {
+    res.redirect("/login");
+  } else {
+    const userId = req.cookies.user_id;
+    const template = {
+      user: users[userId],
+    };
 
-  res.render("urls_new", template);
+    res.render("urls_new", template);
+  }
 });
 app.post("/urls", (req, res) => {
   // Generate a random string for the short URL id
@@ -72,7 +84,7 @@ app.post("/urls", (req, res) => {
 });
 app.get("/urls/:id", (req, res) => {
   const templateVars = {
-    user:users[req.cookies.user_id],
+    user: users[req.cookies.user_id],
     id: req.params.id,
     longURL: urlDatabase[req.params.id],
   };
@@ -156,7 +168,7 @@ app.get("/u/:id", (req, res) => {
   if (longURL) {
     res.redirect(longURL);
   } else {
-    res.status(404).send("shortURL not found");
+    res.status(404).render("error",{message:"shortURL not found"});
   }
 });
 
